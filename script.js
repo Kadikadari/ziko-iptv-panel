@@ -1,6 +1,8 @@
 let currentMac = "";
 
-// تحميل بيانات الجهاز من Firebase
+// -----------------------------
+// تحميل بيانات الجهاز من Firestore
+// -----------------------------
 function loadDevice() {
     const mac = macInput().trim();
     if (!mac) return alert("Enter MAC Address");
@@ -13,30 +15,47 @@ function loadDevice() {
             if (doc.exists) {
                 displayPlaylist(doc.data());
             } else {
+                clearInputs();
                 document.getElementById("status").textContent = "No playlist configured";
             }
         })
         .catch(error => {
-            console.error("Error getting document:", error);
+            console.error("Error loading device:", error);
             document.getElementById("status").textContent = "Error loading device";
         });
 }
 
-// عرض البيانات
+// -----------------------------
+// عرض بيانات الجهاز
+// -----------------------------
 function displayPlaylist(data) {
     const status = document.getElementById("status");
     status.innerHTML = `
 MAC: ${data.mac || currentMac}
 
-M3U: ${data.m3u && data.m3u.enabled ? data.m3u.url : "غير مفعل"}
-Xtream: ${data.xtream && data.xtream.enabled ? data.xtream.server + " | " + data.xtream.username : "غير مفعل"}
-MAG/Stalker: ${data.stalker && data.stalker.enabled ? data.stalker.portal + " | MAC: " + data.stalker.mac : "غير مفعل"}
+M3U: ${data.m3u?.enabled ? data.m3u.url : "غير مفعل"}
+Xtream: ${data.xtream?.enabled ? data.xtream.server + " | " + data.xtream.username : "غير مفعل"}
+MAG/Stalker: ${data.stalker?.enabled ? data.stalker.portal + " | MAC: " + data.stalker.mac : "غير مفعل"}
 
 آخر تحديث: ${data.updated || "غير معروف"}
     `;
+
+    // تحديث الحقول في الواجهة تلقائيًا
+    if (data.m3u?.enabled) m3uUrl().value = data.m3u.url;
+    if (data.xtream?.enabled) {
+        xtServer().value = data.xtream.server;
+        xtUser().value = data.xtream.username;
+        xtPass().value = data.xtream.password;
+    }
+    if (data.stalker?.enabled) {
+        stalkerPortal().value = data.stalker.portal;
+        stalkerMac().value = data.stalker.mac;
+    }
 }
 
-// التحكم في واجهة اختيار النوع
+// -----------------------------
+// واجهة اختيار نوع القائمة
+// -----------------------------
 function switchType() {
     hideAll();
     const type = playlistType().value;
@@ -47,7 +66,9 @@ function hideAll() {
     document.querySelectorAll(".type-box").forEach(e => e.style.display = "none");
 }
 
+// -----------------------------
 // حفظ البيانات في Firestore
+// -----------------------------
 function savePlaylist() {
     if (!currentMac) return alert("Load device first");
 
@@ -62,22 +83,23 @@ function savePlaylist() {
         updated: new Date().toISOString()
     };
 
-    if (type === "m3u") {
-        payload.m3u.enabled = true;
-        payload.m3u.url = m3uUrl().value;
-    }
-
-    if (type === "xtream") {
-        payload.xtream.enabled = true;
-        payload.xtream.server = xtServer().value;
-        payload.xtream.username = xtUser().value;
-        payload.xtream.password = xtPass().value;
-    }
-
-    if (type === "stalker") {
-        payload.stalker.enabled = true;
-        payload.stalker.portal = stalkerPortal().value;
-        payload.stalker.mac = stalkerMac().value || currentMac;
+    // تعبئة البيانات حسب النوع
+    switch(type) {
+        case "m3u":
+            payload.m3u.enabled = true;
+            payload.m3u.url = m3uUrl().value.trim();
+            break;
+        case "xtream":
+            payload.xtream.enabled = true;
+            payload.xtream.server = xtServer().value.trim();
+            payload.xtream.username = xtUser().value.trim();
+            payload.xtream.password = xtPass().value.trim();
+            break;
+        case "stalker":
+            payload.stalker.enabled = true;
+            payload.stalker.portal = stalkerPortal().value.trim();
+            payload.stalker.mac = stalkerMac().value.trim() || currentMac;
+            break;
     }
 
     const docId = currentMac.replace(/:/g, "");
@@ -87,28 +109,46 @@ function savePlaylist() {
             alert("Playlist saved successfully!");
         })
         .catch(error => {
-            console.error("Error writing document:", error);
+            console.error("Error saving playlist:", error);
             alert("Failed to save playlist");
         });
 }
 
+// -----------------------------
 // حذف البيانات
+// -----------------------------
 function removePlaylist() {
     if (!currentMac) return;
     const docId = currentMac.replace(/:/g, "");
     if (confirm("Remove playlist for this device?")) {
         db.collection("devices").doc(docId).delete()
             .then(() => {
+                clearInputs();
                 document.getElementById("status").textContent = "Playlist removed";
             })
             .catch(error => {
-                console.error("Error removing document:", error);
+                console.error("Error removing playlist:", error);
                 alert("Failed to remove playlist");
             });
     }
 }
 
+// -----------------------------
+// مسح الحقول عند عدم وجود بيانات
+// -----------------------------
+function clearInputs() {
+    m3uUrl().value = "";
+    xtServer().value = "";
+    xtUser().value = "";
+    xtPass().value = "";
+    stalkerPortal().value = "";
+    stalkerMac().value = "";
+    hideAll();
+}
+
+// -----------------------------
 // اختصارات DOM
+// -----------------------------
 const macInput = () => document.getElementById("mac").value;
 const playlistType = () => document.getElementById("playlistType");
 const m3uUrl = () => document.getElementById("m3uUrl");
