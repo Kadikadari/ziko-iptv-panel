@@ -1,0 +1,23 @@
+{
+  "mac": "14:0A:C5:B3:3B:A5",
+
+  "m3u": {
+    "enabled": true,
+    "url": "http://example.com/playlist.m3u"
+  },
+
+  "xtream": {
+    "enabled": true,
+    "server": "http://xtream.example.com:8080",
+    "username": "user123",
+    "password": "pass123"
+  },
+
+  "stalker": {
+    "enabled": true,
+    "mac": "14:0A:C5:B3:3B:A5",
+    "portal": "http://stalker.example.com"
+  },
+
+  "updated": "2026-02-06T12:00:00Z"
+}
