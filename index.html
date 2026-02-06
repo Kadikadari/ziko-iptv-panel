@@ -59,6 +59,18 @@
 
 </div>
 
+<!-- زر لتحميل JSON من GitHub حسب MAC -->
+<script>
+    // تحديث زر Load Device لقراءة JSON من GitHub
+    document.querySelector("#mac + button").addEventListener("click", function() {
+        const mac = document.getElementById("mac").value.trim();
+        if (!mac) return alert("Enter MAC Address");
+
+        // استدعاء الدالة الجديدة في script.js
+        loadDevice();
+    });
+</script>
+
 <script src="script.js"></script>
 </body>
 </html>
