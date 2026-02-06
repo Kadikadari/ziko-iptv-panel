@@ -43,12 +43,11 @@
         </div>
 
         <!-- STALKER -->
-        <!-- STALKER -->
-<div class="type-box" id="stalkerBox">
-    <input type="text" id="stalkerPortal" placeholder="Portal URL">
-    <input type="text" id="stalkerMac" placeholder="MAC Address for Stalker">
-</div>
-
+        <div class="type-box" id="stalkerBox">
+            <input type="text" id="stalkerPortal" placeholder="Portal URL">
+            <input type="text" id="stalkerMac" placeholder="MAC Address for Stalker">
+        </div>
+    </div>
 
     <!-- STATUS -->
     <div class="card info">
@@ -58,16 +57,23 @@
 
 </div>
 
-<!-- زر لتحميل JSON من GitHub حسب MAC -->
-<script>
-    // تحديث زر Load Device لقراءة JSON من GitHub
-    document.querySelector("#mac + button").addEventListener("click", function() {
-        const mac = document.getElementById("mac").value.trim();
-        if (!mac) return alert("Enter MAC Address");
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.30.0/firebase-firestore-compat.js"></script>
 
-        // استدعاء الدالة الجديدة في script.js
-        loadDevice();
-    });
+<script>
+  // إعداد Firebase
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 </script>
 
 <script src="script.js"></script>
