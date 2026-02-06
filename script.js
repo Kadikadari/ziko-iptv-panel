@@ -12,7 +12,7 @@ function loadDevice() {
     // تحويل MAC لاسم ملف بدون النقطتين (:)
     const fileName = mac.replace(/:/g, "") + ".json";
 
-    // رابط الملف على GitHub Pages - تم التعديل
+    // رابط الملف على GitHub Pages
     const url = `https://kadikadari.github.io/ziko-iptv-panel/data/${fileName}`;
 
     fetch(url)
@@ -42,7 +42,7 @@ MAC: ${data.mac || currentMac}
 
 M3U: ${data.m3u && data.m3u.enabled ? data.m3u.url : "غير مفعل"}
 Xtream: ${data.xtream && data.xtream.enabled ? data.xtream.server + " | " + data.xtream.username : "غير مفعل"}
-MAG/Stalker: ${data.stalker && data.stalker.enabled ? data.stalker.portal : "غير مفعل"}
+MAG/Stalker: ${data.stalker && data.stalker.enabled ? data.stalker.portal + " | MAC: " + data.stalker.mac : "غير مفعل"}
 
 آخر تحديث: ${data.updated || "غير معروف"}
     `;
@@ -74,7 +74,7 @@ function savePlaylist() {
         mac: currentMac,
         m3u: { enabled: false, url: "" },
         xtream: { enabled: false, server: "", username: "", password: "" },
-        stalker: { enabled: false, portal: "" },
+        stalker: { enabled: false, mac: "", portal: "" },
         updated: new Date().toISOString()
     };
 
@@ -92,6 +92,7 @@ function savePlaylist() {
 
     if (type === "stalker") {
         payload.stalker.enabled = true;
+        payload.stalker.mac = currentMac; // إضافة MAC للجهاز
         payload.stalker.portal = stalkerUrl().value;
     }
 
