@@ -70,11 +70,3 @@ pre {
     color: #22c55e;
     white-space: pre-wrap;
 }
-#status {
-    background: #0f172a;
-    padding: 15px;
-    border-radius: 10px;
-    font-family: monospace;
-    font-size: 14px;
-    overflow-x: auto;
-}
