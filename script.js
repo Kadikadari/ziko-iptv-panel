@@ -92,8 +92,9 @@ function savePlaylist() {
 
     if (type === "stalker") {
         payload.stalker.enabled = true;
-        payload.stalker.mac = currentMac; // إضافة MAC للجهاز
-        payload.stalker.portal = stalkerUrl().value;
+        // الآن المستخدم يمكنه إدخال MAC خاص
+        payload.stalker.portal = document.getElementById("stalkerPortal").value;
+        payload.stalker.mac = document.getElementById("stalkerMac").value || currentMac;
     }
 
     // حفظ محلي مؤقت
@@ -121,4 +122,5 @@ const m3uUrl = () => document.getElementById("m3uUrl");
 const xtServer = () => document.getElementById("xtServer");
 const xtUser = () => document.getElementById("xtUser");
 const xtPass = () => document.getElementById("xtPass");
-const stalkerUrl = () => document.getElementById("stalkerUrl");
+const stalkerPortal = () => document.getElementById("stalkerPortal");
+const stalkerMac = () => document.getElementById("stalkerMac");
