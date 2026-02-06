@@ -1,0 +1,22 @@
+{
+  "mac": "14:0A:C5:B3:3B:A5",
+
+  "m3u": {
+    "enabled": false,
+    "url": ""
+  },
+
+  "xtream": {
+    "enabled": false,
+    "server": "http://1tv41.icu:8080",
+    "username": "19133176",
+    "password": "19133176"
+  },
+
+  "stalker": {
+    "enabled": false,
+    "portal": ""
+  },
+
+  "updated": "2026-02-06T12:00:00Z"
+}
