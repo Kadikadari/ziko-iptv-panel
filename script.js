@@ -1,6 +1,6 @@
 let currentMac = "";
 
-// تحميل بيانات الجهاز من Firestore
+// تحميل بيانات الجهاز من Firebase
 function loadDevice() {
     const mac = macInput().trim();
     if (!mac) return alert("Enter MAC Address");
