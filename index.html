@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZIKO IPTV PANEL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>ZIKO IPTV Control Panel</h1>
+    <p class="subtitle">Remote playlist management for your IPTV player</p>
+
+    <!-- DEVICE -->
+    <div class="card">
+        <h2>Device</h2>
+        <input type="text" id="mac" placeholder="MAC Address (AA:BB:CC:DD:EE:FF)">
+        <button onclick="loadDevice()">Load Device</button>
+    </div>
+
+    <!-- PLAYLIST TYPE -->
+    <div class="card">
+        <h2>Playlist Type</h2>
+
+        <select id="playlistType" onchange="switchType()">
+            <option value="">Select playlist type</option>
+            <option value="m3u">M3U Playlist</option>
+            <option value="xtream">Xtream Codes</option>
+            <option value="stalker">MAG / Stalker Portal</option>
+        </select>
+
+        <!-- M3U -->
+        <div class="type-box" id="m3uBox">
+            <input type="text" id="m3uUrl" placeholder="M3U URL">
+        </div>
+
+        <!-- XTREAM -->
+        <div class="type-box" id="xtreamBox">
+            <input type="text" id="xtServer" placeholder="Server URL">
+            <input type="text" id="xtUser" placeholder="Username">
+            <input type="text" id="xtPass" placeholder="Password">
+        </div>
+
+        <!-- STALKER -->
+        <div class="type-box" id="stalkerBox">
+            <input type="text" id="stalkerUrl" placeholder="Portal URL">
+        </div>
+
+        <button onclick="savePlaylist()">Save Playlist</button>
+        <button class="danger" onclick="removePlaylist()">Remove Playlist</button>
+    </div>
+
+    <!-- STATUS -->
+    <div class="card info">
+        <h2>Device Status</h2>
+        <pre id="status">No device loaded</pre>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
