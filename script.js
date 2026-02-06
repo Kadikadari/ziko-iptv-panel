@@ -12,9 +12,8 @@ function loadDevice() {
     // تحويل MAC لاسم ملف بدون النقطتين (:)
     const fileName = mac.replace(/:/g, "") + ".json";
 
-    // رابط الملف على GitHub Pages
-    const url = `https://<USERNAME>.github.io/<REPO>/data/${fileName}`;
-    // استبدل <USERNAME> و <REPO> باسم المستخدم والمستودع الخاص بك
+    // رابط الملف على GitHub Pages - تم التعديل
+    const url = `https://kadikadari.github.io/ziko-iptv-panel/data/${fileName}`;
 
     fetch(url)
         .then(response => {
