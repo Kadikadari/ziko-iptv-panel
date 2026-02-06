@@ -1,34 +1,26 @@
 let currentMac = "";
 
 // -----------------------------
-// تحميل بيانات الجهاز من JSON على GitHub
+// تحميل بيانات الجهاز من Firestore
 // -----------------------------
 function loadDevice() {
     const mac = macInput().trim();
     if (!mac) return alert("Enter MAC Address");
 
     currentMac = mac;
+    const docId = mac.replace(/:/g, "");
 
-    // تحويل MAC لاسم ملف بدون النقطتين (:)
-    const fileName = mac.replace(/:/g, "") + ".json";
-
-    // رابط الملف على GitHub Pages
-    const url = `https://kadikadari.github.io/ziko-iptv-panel/data/${fileName}`;
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error("No JSON file for this MAC");
-            return response.json();
-        })
-        .then(data => {
-            displayPlaylist(data);
+    db.collection("devices").doc(docId).get()
+        .then(doc => {
+            if (doc.exists) {
+                displayPlaylist(doc.data());
+            } else {
+                document.getElementById("status").textContent = "No playlist configured";
+            }
         })
         .catch(error => {
-            console.log("GitHub fetch failed, checking localStorage...");
-            // fallback لاستخدام localStorage
-            const dataLS = localStorage.getItem("ziko_" + mac);
-            document.getElementById("status").textContent =
-                dataLS ? dataLS : "No playlist configured";
+            console.error("Error getting document:", error);
+            document.getElementById("status").textContent = "Error loading device";
         });
 }
 
@@ -62,7 +54,7 @@ function hideAll() {
 }
 
 // -----------------------------
-// حفظ البيانات محليًا (اختياري)
+// حفظ البيانات في Firestore
 // -----------------------------
 function savePlaylist() {
     if (!currentMac) return alert("Load device first");
@@ -92,14 +84,20 @@ function savePlaylist() {
 
     if (type === "stalker") {
         payload.stalker.enabled = true;
-        // الآن المستخدم يمكنه إدخال MAC خاص
-        payload.stalker.portal = document.getElementById("stalkerPortal").value;
-        payload.stalker.mac = document.getElementById("stalkerMac").value || currentMac;
+        payload.stalker.portal = stalkerPortal().value;
+        payload.stalker.mac = stalkerMac().value || currentMac;
     }
 
-    // حفظ محلي مؤقت
-    localStorage.setItem("ziko_" + currentMac, JSON.stringify(payload, null, 2));
-    displayPlaylist(payload);
+    const docId = currentMac.replace(/:/g, "");
+    db.collection("devices").doc(docId).set(payload)
+        .then(() => {
+            displayPlaylist(payload);
+            alert("Playlist saved successfully!");
+        })
+        .catch(error => {
+            console.error("Error writing document:", error);
+            alert("Failed to save playlist");
+        });
 }
 
 // -----------------------------
@@ -107,9 +105,16 @@ function savePlaylist() {
 // -----------------------------
 function removePlaylist() {
     if (!currentMac) return;
+    const docId = currentMac.replace(/:/g, "");
     if (confirm("Remove playlist for this device?")) {
-        localStorage.removeItem("ziko_" + currentMac);
-        document.getElementById("status").textContent = "Playlist removed";
+        db.collection("devices").doc(docId).delete()
+            .then(() => {
+                document.getElementById("status").textContent = "Playlist removed";
+            })
+            .catch(error => {
+                console.error("Error removing document:", error);
+                alert("Failed to remove playlist");
+            });
     }
 }
 
