@@ -1,8 +1,6 @@
 let currentMac = "";
 
-// -----------------------------
 // تحميل بيانات الجهاز من Firestore
-// -----------------------------
 function loadDevice() {
     const mac = macInput().trim();
     if (!mac) return alert("Enter MAC Address");
@@ -24,9 +22,7 @@ function loadDevice() {
         });
 }
 
-// -----------------------------
-// عرض البيانات على الموقع
-// -----------------------------
+// عرض البيانات
 function displayPlaylist(data) {
     const status = document.getElementById("status");
     status.innerHTML = `
@@ -40,9 +36,7 @@ MAG/Stalker: ${data.stalker && data.stalker.enabled ? data.stalker.portal + " | 
     `;
 }
 
-// -----------------------------
 // التحكم في واجهة اختيار النوع
-// -----------------------------
 function switchType() {
     hideAll();
     const type = playlistType().value;
@@ -53,9 +47,7 @@ function hideAll() {
     document.querySelectorAll(".type-box").forEach(e => e.style.display = "none");
 }
 
-// -----------------------------
 // حفظ البيانات في Firestore
-// -----------------------------
 function savePlaylist() {
     if (!currentMac) return alert("Load device first");
 
@@ -100,9 +92,7 @@ function savePlaylist() {
         });
 }
 
-// -----------------------------
 // حذف البيانات
-// -----------------------------
 function removePlaylist() {
     if (!currentMac) return;
     const docId = currentMac.replace(/:/g, "");
@@ -118,9 +108,7 @@ function removePlaylist() {
     }
 }
 
-// -----------------------------
 // اختصارات DOM
-// -----------------------------
 const macInput = () => document.getElementById("mac").value;
 const playlistType = () => document.getElementById("playlistType");
 const m3uUrl = () => document.getElementById("m3uUrl");
