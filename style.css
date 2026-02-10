@@ -47,6 +47,7 @@ button {
     cursor: pointer;
     font-size: 16px;
     margin-top: 5px;
+    transition: background 0.2s ease;
 }
 
 button:hover {
@@ -56,6 +57,22 @@ button:hover {
 button.danger {
     background: #ef4444;
     color: #fff;
+}
+
+/* زر تحميل التطبيق */
+.download-btn {
+    background: linear-gradient(135deg, #22c55e, #4ade80);
+    color: #020617;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 14px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    transform: scale(1.03);
 }
 
 .type-box {
